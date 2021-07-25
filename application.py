@@ -2,7 +2,6 @@ from constants import TEAMS, PLAYERS
 from random import choice
 
 
-
 def clean_data():
     #cleans data in order for compatibility with the rest of the program
     cleaned = []
@@ -25,9 +24,9 @@ def clean_data():
 def balance_teams(cleaned):
     #ensures equal number of experienced and inexperienced players on each team
     num_per_team = int(len(PLAYERS)/len(TEAMS))
-    new_teams = {team:[] for team in TEAMS}
-    experienced = [player for player in cleaned if player['experience'] == True]
-    inexperienced = [player for player in cleaned if player['experience'] == False]
+    new_teams = {team: [] for team in TEAMS}
+    experienced = [player for player in cleaned if player['experience']]
+    inexperienced = [player for player in cleaned if not player['experience']]
     for team in new_teams:
         for i in range(int(num_per_team/2)):
             inexp_player, exp_player = choice(inexperienced), choice(experienced)
@@ -35,14 +34,14 @@ def balance_teams(cleaned):
             inexperienced.remove(inexp_player)
             new_teams[team].append(exp_player)
             experienced.remove(exp_player)
-                
+
     return new_teams
 
 
 def total_experienced(team):
     experienced = 0
     for player in team:
-        if player['experience'] == True:
+        if player['experience']:
             experienced += 1
 
     return experienced
@@ -51,7 +50,7 @@ def total_experienced(team):
 def total_inexperienced(team):
     inexperienced = 0
     for player in team:
-        if player['experience'] == False:
+        if not player['experience']:
             inexperienced += 1
 
     return inexperienced
@@ -59,7 +58,7 @@ def total_inexperienced(team):
 
 def average_height(team):
     heights = [player['height'] for player in team]
-    return sum(heights)/ len(heights)
+    return sum(heights) / len(heights)
 
 
 def guardian_names(team):
@@ -85,7 +84,7 @@ if __name__ == '__main__':
             print("\nThat is not one of the options, please try again. ")
             continue
         else:
-            if option not in  [1, 2]:
+            if option not in [1, 2]:
                 print("\nThat is not one of the options, please try again. ")
                 continue
 
@@ -95,7 +94,9 @@ if __name__ == '__main__':
             for name in team_names:
                 print("{}. {}".format(team_names.index(name) + 1, name))
             try:
-                chosen_team = int(input("\nWhich team? (enter the corresponding number): "))
+                chosen_team = int(
+                    input("\nWhich team? (enter the corresponding number): ")
+                    )
             except:
                 print("\nThat is not one of the options, please return to the menu. ")
                 continue
@@ -104,7 +105,8 @@ if __name__ == '__main__':
                     print('-' * 50)
                     chosen_team_name = team_names[chosen_team - 1]
                     team = new_teams[chosen_team_name]
-                    print(f"\nHere are the stats for the {chosen_team_name}:\n")
+                    print(
+                        f"\nHere are the stats for the {chosen_team_name}:\n")
                     print("Total number of players: {}\n".format(
                         total_inexperienced(team) + total_experienced(team)))
                     print("Names of all players:\n{}\n".format(
@@ -119,7 +121,7 @@ if __name__ == '__main__':
                         guardian_names(team)))
                 else:
                     print("\nThat is not one of the options, please return to the menu. ")
-                    continue     
+                    continue
         else:
             print("\nGoodbye!")
             quitting = True
